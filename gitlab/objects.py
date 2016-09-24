@@ -2229,6 +2229,23 @@ class Project(GitlabObject):
         r = self.gitlab._raw_post(url, data=data, **kwargs)
         raise_error_from_response(r, GitlabCreateError, 201)
 
+    def build_trigger(self, token, ref, **kwargs):
+        """Trigger a build.
+
+        Args:
+            token (str): trigger's token.
+            ref (str): the Git ref on which the trigger will be performed.
+
+        Raises:
+            GitlabConnectionError: If the server cannot be reached.
+            GitlabOperationError: If the server fails to perform the request.
+        """
+        url = "/projects/%s/trigger/builds" % self.id
+        data = {'token': token, 'ref': ref}
+        data.update(**kwargs)
+        r = self.gitlab._raw_post(url, data=data)
+        raise_error_from_response(r, GitlabOperationError, 201)
+
 
 class Runner(GitlabObject):
     _url = '/runners'
